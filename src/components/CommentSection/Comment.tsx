@@ -4,20 +4,25 @@ import CommentInput from "./CommentInput";
 
 type CommentProps = {
   comment: CommentType;
+  onReply: (parentId: number, content: string) => void;
   onDelete: (id: number) => void;
   nested?: boolean;
 };
 
-const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
+const Comment = ({
+  comment,
+  onReply,
+  onDelete,
+  nested = false,
+}: CommentProps) => {
   const [showReplies, setShowReplies] = useState(false);
   const [showInput, setShowInput] = useState(false);
+  const toggleReplies = () => setShowReplies((state) => !state);
+  const toggleInput = () => setShowInput((state) => !state);
 
   const { id, author, date, content, replies } = comment;
   const hasReplies = replies.length > 0;
   const isOwner = author === "You";
-
-  const toggleReplies = () => setShowReplies((state) => !state);
-  const toggleInput = () => setShowInput((state) => !state);
 
   const containerStyles = nested
     ? `text-slate-900 py-2 pl-4 mb-4 border-l-2 hover:bg-slate-100 ${
@@ -50,7 +55,11 @@ const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
         </button>
         {hasReplies && (
           <button onClick={toggleReplies} className="hover:underline mr-2">
-            {showReplies ? "Hide replies" : `Show ${replies.length} Replies`}
+            {showReplies
+              ? "Hide replies"
+              : `Show ${replies.length} ${
+                  replies.length > 1 ? "Replies" : "Reply"
+                }`}
           </button>
         )}
       </div>
@@ -58,8 +67,9 @@ const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
         <div className="mt-2">
           <CommentInput
             onSubmit={(content) => {
-              console.log(content);
+              onReply(id, content);
               toggleInput();
+              setShowReplies(true);
             }}
           />
         </div>
@@ -70,6 +80,7 @@ const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
             <Comment
               key={reply.id}
               comment={reply}
+              onReply={onReply}
               onDelete={onDelete}
               nested
             />

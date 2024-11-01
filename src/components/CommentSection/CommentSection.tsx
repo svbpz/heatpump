@@ -33,12 +33,37 @@ const CommentSection = ({ title }: CommentSectionProps) => {
     setComments(deleteCommentRecursively(comments));
   };
 
+  const onReply = (parentId: number, content: string): void => {
+    const newReply: CommentType = {
+      id: Date.now(),
+      author: "You",
+      date: new Date().toLocaleDateString(),
+      content,
+      replies: [],
+    };
+
+    const addReplyRecursively = (comments: CommentType[]): CommentType[] =>
+      comments.map((comment) => {
+        if (comment.id === parentId) {
+          return { ...comment, replies: [...comment.replies, newReply] };
+        }
+        return { ...comment, replies: addReplyRecursively(comment.replies) };
+      });
+
+    setComments(addReplyRecursively(comments));
+  };
+
   return (
     <div className="container mx-auto p-6 pb-1 rounded-lg border-2">
       <h2 className="text-xl mb-4">{title}</h2>
       <CommentInput onSubmit={onComment} />
       {comments.map((comment) => (
-        <Comment key={comment.id} comment={comment} onDelete={onDelete} />
+        <Comment
+          key={comment.id}
+          comment={comment}
+          onDelete={onDelete}
+          onReply={onReply}
+        />
       ))}
     </div>
   );
