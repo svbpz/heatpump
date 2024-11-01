@@ -6,12 +6,16 @@ import { useLocalStorage } from "../../hooks";
 
 type CommentSectionProps = {
   title: string;
+  useMockData?: boolean;
 };
 
-const CommentSection = ({ title }: CommentSectionProps) => {
+const CommentSection = ({
+  title,
+  useMockData = false,
+}: CommentSectionProps) => {
   const [comments, setComments] = useLocalStorage<CommentType[]>(
     "comments",
-    initialComments
+    useMockData ? initialComments : []
   );
 
   const onComment = (content: string): void => {
