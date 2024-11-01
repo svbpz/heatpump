@@ -1,27 +1,24 @@
-// src/components/Comment/__tests__/CommentSection.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import CommentSection from "../CommentSection";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock localStorage to avoid actual persistence
 const localStorageData: Record<string, string> = {
   comments: JSON.stringify("[]"),
-}; // Internal storage for mock
+};
 
 vi.spyOn(window.localStorage, "setItem").mockImplementation(
   (key: string, value: string) => {
-    localStorageData[key] = value; // Store the value in the internal object
+    localStorageData[key] = value;
   }
 );
 
 vi.spyOn(window.localStorage, "getItem").mockImplementation((key: string) => {
-  return localStorageData[key] || null; // Return the stored value or null if not found
+  return localStorageData[key] || null;
 });
 
-// You can also mock the clear method if needed
 vi.spyOn(window.localStorage, "clear").mockImplementation(() => {
   for (const key in localStorageData) {
-    delete localStorageData[key]; // Clear all items
+    delete localStorageData[key];
   }
 });
 
@@ -59,14 +56,12 @@ describe("CommentSection", () => {
   it("replies to a comment", () => {
     render(<CommentSection title="Comments" />);
 
-    // Add parent comment
     const textarea = screen.getByPlaceholderText("Write a comment...");
     fireEvent.change(textarea, { target: { value: "Parent comment" } });
 
     const submitButton = screen.getByRole("button", { name: "Comment" });
     fireEvent.click(submitButton);
 
-    // Reply to parent comment
     const replyButton = screen.getByRole("button", { name: "Reply" });
     fireEvent.click(replyButton);
 
@@ -89,7 +84,6 @@ describe("CommentSection", () => {
   it("deletes a comment", () => {
     render(<CommentSection title="Comments" />);
 
-    // Add and delete a comment
     const textarea = screen.getByPlaceholderText("Write a comment...");
     fireEvent.change(textarea, { target: { value: "Deletable comment" } });
     fireEvent.click(screen.getByRole("button", { name: "Comment" }));
