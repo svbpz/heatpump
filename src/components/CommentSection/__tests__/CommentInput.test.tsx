@@ -1,4 +1,3 @@
-// src/components/Comment/__tests__/CommentInput.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import CommentInput from "../CommentInput";
 import { vi, describe, it, expect } from "vitest";

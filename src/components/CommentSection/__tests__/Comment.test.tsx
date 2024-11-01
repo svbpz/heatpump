@@ -1,4 +1,3 @@
-// src/components/Comment/__tests__/Comment.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import Comment from "../Comment";
 import { CommentType } from "../../../types";
