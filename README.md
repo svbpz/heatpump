@@ -2,7 +2,7 @@
 
 This React/TypeScript app uses:
 
-- 🎨 **TailwindCS** for styling
+- 🎨 **TailwindCSS** for styling
 - :zap: **Vite** as build tool and bundler
 - 🧪 **Vitest** and **RTL** for testing
 - 💾 **LocalStorage** to persist data locally
