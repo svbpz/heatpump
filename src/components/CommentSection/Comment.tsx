@@ -3,13 +3,14 @@ import { CommentType } from "../../types";
 
 type CommentProps = {
   comment: CommentType;
+  onDelete: (id: number) => void;
   nested?: boolean;
 };
 
-const Comment = ({ comment, nested = false }: CommentProps) => {
+const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
   const [showReplies, setShowReplies] = useState(false);
 
-  const { author, date, content, replies } = comment;
+  const { id, author, date, content, replies } = comment;
   const hasReplies = replies.length > 0;
   const isOwner = author === "You";
 
@@ -30,6 +31,14 @@ const Comment = ({ comment, nested = false }: CommentProps) => {
           </h3>
           <p className="text-slate-700 text-sm">{date}</p>
         </div>
+        {isOwner && (
+          <button
+            onClick={() => onDelete(id)}
+            className="text-sm text-slate-700 hover:underline mx-2"
+          >
+            Delete
+          </button>
+        )}
       </div>
       <p className="mb-2">{content}</p>
       <div className="flex items-center text-slate-700 text-sm justify-between">
@@ -42,7 +51,12 @@ const Comment = ({ comment, nested = false }: CommentProps) => {
       {showReplies && (
         <div className="ml-2 mt-4">
           {replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} nested />
+            <Comment
+              key={reply.id}
+              comment={reply}
+              onDelete={onDelete}
+              nested
+            />
           ))}
         </div>
       )}
