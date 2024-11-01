@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CommentType } from "../../types";
+import CommentInput from "./CommentInput";
 
 type CommentProps = {
   comment: CommentType;
@@ -9,12 +10,14 @@ type CommentProps = {
 
 const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
   const [showReplies, setShowReplies] = useState(false);
+  const [showInput, setShowInput] = useState(false);
 
   const { id, author, date, content, replies } = comment;
   const hasReplies = replies.length > 0;
   const isOwner = author === "You";
 
   const toggleReplies = () => setShowReplies((state) => !state);
+  const toggleInput = () => setShowInput((state) => !state);
 
   const containerStyles = nested
     ? `text-slate-900 py-2 pl-4 mb-4 border-l-2 hover:bg-slate-100 ${
@@ -42,12 +45,25 @@ const Comment = ({ comment, onDelete, nested = false }: CommentProps) => {
       </div>
       <p className="mb-2">{content}</p>
       <div className="flex items-center text-slate-700 text-sm justify-between">
+        <button onClick={toggleInput} className="hover:underline">
+          {showInput ? "Cancel" : "Reply"}
+        </button>
         {hasReplies && (
-          <button onClick={toggleReplies} className="hover:underline mx-2">
+          <button onClick={toggleReplies} className="hover:underline mr-2">
             {showReplies ? "Hide replies" : `Show ${replies.length} Replies`}
           </button>
         )}
       </div>
+      {showInput && (
+        <div className="mt-2">
+          <CommentInput
+            onSubmit={(content) => {
+              console.log(content);
+              toggleInput();
+            }}
+          />
+        </div>
+      )}
       {showReplies && (
         <div className="ml-2 mt-4">
           {replies.map((reply) => (
