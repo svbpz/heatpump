@@ -1,23 +1,18 @@
-import { useEffect, useState } from "react";
 import { CommentType } from "../../types";
 import Comment from "./Comment";
 import CommentInput from "./CommentInput";
 import { initialComments } from "../../data";
+import { useLocalStorage } from "../../hooks";
 
 type CommentSectionProps = {
   title: string;
 };
 
 const CommentSection = ({ title }: CommentSectionProps) => {
-  const [comments, setComments] = useState<CommentType[]>(() => {
-    const savedComments = localStorage.getItem("comments");
-    return savedComments ? JSON.parse(savedComments) : initialComments;
-  });
-
-  useEffect(() => {
-    // Save comments to localStorage every time the comments state changes
-    localStorage.setItem("comments", JSON.stringify(comments));
-  }, [comments]);
+  const [comments, setComments] = useLocalStorage<CommentType[]>(
+    "comments",
+    initialComments
+  );
 
   const onComment = (content: string): void => {
     const newComment: CommentType = {
